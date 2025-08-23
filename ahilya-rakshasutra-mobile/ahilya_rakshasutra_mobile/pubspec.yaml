@@ -1,0 +1,43 @@
+name: ahilya_rakshasutra_mobile
+description: "A new Flutter project."
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.3.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  http: ^1.2.2
+  shared_preferences: ^2.2.3
+  flutter_native_splash: ^2.4.6
+flutter_native_splash:
+  color: "#F4E3C9"                 # same beige as background
+  background_image: assets/images/logo2.png
+  fullscreen: true                  # removes status bar overlap
+
+  android_12:
+    color: "#F4E3C9"                 # same beige as background
+    image:  assets/images/logo2.png  # centered icon for Android 12's system splash
+
+
+  # Optional: better Android adaptive icon support
+  # adaptive_icon_foreground: assets/icon_fg.png
+  # adaptive_icon_background: "#FFFFFF"  # or assets/icon_bg.png
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+  flutter_launcher_icons: ^0.14.4
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/logo2.png
+  fonts:
+    - family: Noto_Sans_Devanagari
+      fonts:
+        - asset: assets/fonts/Noto_Sans_Devanagari.ttf

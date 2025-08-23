@@ -1,0 +1,43 @@
+version: "3.8"
+
+services:
+  cowrie:
+    image: cowrie/cowrie:latest
+    container_name: cowrie
+    restart: unless-stopped
+    ports:
+      - "2222:2222" # SSH honeypot
+      - "2223:2223" # Telnet honeypot
+    volumes:
+      - ./data/cowrie:/cowrie/cowrie-git/var
+
+  webhoneypot:
+    build:
+      context: ./webhoneypot
+    container_name: webhoneypot
+    restart: unless-stopped
+    environment:
+      - BACKEND_API_BASE=${BACKEND_API_BASE}
+      - INGEST_TOKEN=${INGEST_TOKEN}
+      - HONEYPOT_AREA=${HONEYPOT_AREA:-Unknown}
+    ports:
+      - "8081:8080"  # HTTP web honeypot
+    depends_on:
+      - cowrie
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+
+  shipper:
+    build:
+      context: ./shipper
+    container_name: cowrie-shipper
+    restart: unless-stopped
+    environment:
+      - BACKEND_API_BASE=${BACKEND_API_BASE}
+      - INGEST_TOKEN=${INGEST_TOKEN}
+    volumes:
+      - ./data/cowrie:/cowrie-var:ro
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
