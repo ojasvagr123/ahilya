@@ -1,9 +1,14 @@
 from sqlmodel import SQLModel, Session, create_engine
+from fastapi import Depends
 import os
+from dotenv import load_dotenv
+from sqlalchemy.orm import declarative_base
+Base = declarative_base()
 
-DB_URL = os.getenv("DB_URL", "sqlite:///./rakshasutra.db")
-connect_args = {"check_same_thread": False} if DB_URL.startswith("sqlite") else {}
-engine = create_engine(DB_URL, echo=False, connect_args=connect_args)
+load_dotenv()
+
+DB_URL = os.getenv("DB_URL", "sqlite:///./rakshasutra.db") 
+engine = create_engine(DB_URL, echo=False)
 
 def init_db():
     SQLModel.metadata.create_all(engine)
@@ -11,3 +16,4 @@ def init_db():
 def get_session():
     with Session(engine) as session:
         yield session
+    

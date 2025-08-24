@@ -12,6 +12,7 @@ from ..models import Report, ReportType
 from ..schemas import ReportIn, ReportOut
 from ..deps import get_current_user
 
+
 router = APIRouter(prefix="/reports", tags=["reports"])
 
 # -----------------------------

@@ -15,7 +15,7 @@ def hash_password(p: str) -> str:
 
 def verify_password(p: str, h: str) -> bool:
     return pwd_ctx.verify(p, h)
-
+    
 def create_access_token(sub: str, extra: Optional[dict] = None) -> str:
     data = {"sub": sub, **(extra or {})}
     expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
