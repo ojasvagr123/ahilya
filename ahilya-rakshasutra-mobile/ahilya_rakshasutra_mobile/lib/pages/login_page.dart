@@ -10,8 +10,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final phone = TextEditingController(text: '+91'); // normal user
-  final pass = TextEditingController(text: '');
+  final phone = TextEditingController(text: '+911111111111'); // normal user
+  final pass = TextEditingController(text: 'pass');
   bool busy = false;
   String? err;
   final api = Api();
