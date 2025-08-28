@@ -4,7 +4,9 @@ import { useEffect, useState } from "react";
 import LoginPage from "./Pages/LoginPage";
 import Dashboard from "./Pages/Dashboard";
 import SharePage from "./Pages/SharePage";
-import AlertPage from "./Pages/AlertPage";   // <-- add
+import AlertPage from "./Pages/AlertPage";
+import ModelLabPage from "./Pages/ModelLabPage"; // <-- new import
+import MalwarePage from "./Pages/MalwarePage";
 
 type RequireAuthProps = { authed: boolean; children: ReactNode };
 
@@ -25,10 +27,20 @@ function Shell() {
 
   return (
     <Routes>
+      {/* login */}
       <Route
         path="/login"
-        element={<LoginPage onAuthed={() => { setAuthed(true); navigate("/", { replace: true }); }} />}
+        element={
+          <LoginPage
+            onAuthed={() => {
+              setAuthed(true);
+              navigate("/", { replace: true });
+            }}
+          />
+        }
       />
+
+      {/* dashboard */}
       <Route
         path="/"
         element={
@@ -37,6 +49,8 @@ function Shell() {
           </RequireAuth>
         }
       />
+
+      {/* share */}
       <Route
         path="/share"
         element={
@@ -45,14 +59,36 @@ function Shell() {
           </RequireAuth>
         }
       />
+
+      {/* alerts */}
       <Route
-        path="/alert"  // <-- new route for email alerts
+        path="/alert"
         element={
           <RequireAuth authed={authed}>
             <AlertPage />
           </RequireAuth>
         }
       />
+
+      {/* model lab */}
+      <Route
+        path="/model-lab"
+        element={
+          <RequireAuth authed={authed}>
+            <ModelLabPage />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/malware"
+        element={
+          <RequireAuth authed={authed}>
+            <MalwarePage />
+          </RequireAuth>
+        }
+      />
+
+      {/* fallback */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

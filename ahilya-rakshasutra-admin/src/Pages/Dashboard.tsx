@@ -9,12 +9,11 @@ import {
   type ModelOut
 } from "../api";
 import Map from "../components/Map";
-import SummaryBars from "../components/SummaryBars";
 import { useNavigate } from "react-router-dom";
 
 type Filter = "all" | "sms" | "url" | "voip";
 
-const HONEYPOT_URL = "http://56.228.3.220/";
+const HONEYPOT_URL = "http://13.48.133.89/";
 const API_BASE = import.meta.env.VITE_API_BASE ?? "http://127.0.0.1:8000";
 
 export default function Dashboard() {
@@ -34,10 +33,8 @@ export default function Dashboard() {
     const s = await getSummary();
     setCounts(s.counts);
     setPoints(await getHeatmap());
-    //setRows(s.latest ?? []);
   }
 
-  // Always fetch wide, filter locally so the dropdown always works
   async function loadTable(currentFilter: Filter) {
     const list = await getReports(undefined as any, 200);
     const all = Array.isArray(list) ? list : [];
@@ -51,16 +48,15 @@ export default function Dashboard() {
 
   useEffect(() => {
     load();
-    const t = setInterval(load, 5000); // only refresh counts + heatmap
+    const t = setInterval(load, 5000);
     return () => clearInterval(t);
   }, []);
 
   useEffect(() => {
     loadTable(filter);
-    const t = setInterval(() => loadTable(filter), 5000); // refresh table too
+    const t = setInterval(() => loadTable(filter), 5000);
     return () => clearInterval(t);
   }, [filter]);
-
 
   // ---------- Helpers ----------
   function toUpperType(t: string) {
@@ -166,20 +162,15 @@ export default function Dashboard() {
 
   // ---------- UI ----------
   return (
-    // Prevent the page itself from scrolling; we'll scroll only the right pane
     <div className="min-h-screen bg-[#fff4e9] overflow-hidden">
-      {/* Header (same as Login) */}
+      {/* Header */}
       <div className="bg-[#e07b3a] shadow">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
             {/* Left: Logos + Title */}
             <div className="flex items-center space-x-6">
               <div className="w-16 h-16 rounded-full flex items-center justify-center shadow border border-[#f2c197] bg-white overflow-hidden">
-                <img
-                  src="/images/ahilya-logo.png"
-                  alt="Ahilya Logo"
-                  className="object-contain w-full h-full"
-                />
+                <img src="/images/ahilya-logo.png" alt="Ahilya Logo" className="object-contain w-full h-full" />
               </div>
               <div className="text-white">
                 <h1 className="text-2xl font-bold">अहिल्या रक्षासूत्र</h1>
@@ -187,23 +178,10 @@ export default function Dashboard() {
               </div>
             </div>
 
-            {/* Right: Honeypot + Logout + IMC */}
+            {/* Right: Logout + IMC */}
             <div className="flex items-center space-x-4">
-              <a
-                href={HONEYPOT_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-4 py-2 rounded-xl font-semibold bg-[#fff9f3] border border-[#f2c197] shadow text-[#4a2e05] hover:bg-white transition"
-                title="Open Cowrie honeypot dashboard in a new tab"
-              >
-                Show Honeypot Logs
-              </a>
-
               <button
-                onClick={() => {
-                  logout();
-                  location.reload();
-                }}
+                onClick={() => { logout(); location.reload(); }}
                 className="px-4 py-2 rounded-xl font-semibold bg-[#fff9f3] border border-[#f2c197] shadow text-[#4a2e05] hover:bg-white transition"
                 title="Logout"
               >
@@ -211,11 +189,7 @@ export default function Dashboard() {
               </button>
 
               <div className="w-16 h-16 rounded-full flex items-center justify-center shadow border border-[#f2c197] bg-[#fff9f3] overflow-hidden">
-                <img
-                  src="/images/imc-logo.png"
-                  alt="IMC Logo"
-                  className="object-contain w-full h-full"
-                />
+                <img src="/images/imc-logo.png" alt="IMC Logo" className="object-contain w-full h-full" />
               </div>
               <div className="text-white text-right">
                 <p className="text-sm font-medium">Indore Municipal Corporation</p>
@@ -226,24 +200,57 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Main Content locked to viewport height; right pane scrolls */}
+      {/* Main */}
       <div className="h-[calc(100vh-80px)] p-0">
         <div className="h-full grid grid-cols-[2fr_1fr]">
-          {/* Left map panel stays fixed height, no scroll */}
-          <div className="h-full bg-[#fffdfb] border-r border-[#f2c197] overflow-hidden">
-            <Map points={points} />
-          </div>
+          {/* Left map panel with bottom toolbar */}
+          <div className="h-full bg-[#fffdfb] border-r border-[#f2c197] overflow-hidden flex flex-col">
+            <div className="flex-1 overflow-hidden">
+              <Map points={points} />
+            </div>
 
-          {/* Right sidebar is the only scrollable area */}
+            {/* Bottom toolbar: Run Classifier */}
+            <div className="border-t border-[#f2c197] bg-[#e07b3a] px-4 py-3">
+              <div className="flex items-center gap-2">
+                <span className="text-white font-semibold mr-auto">Run Classifier</span>
+
+                <a
+                  href={HONEYPOT_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-4 py-2 rounded-xl font-semibold bg-[#fff9f3] border border-[#f2c197] shadow text-[#4a2e05] hover:bg-white transition"
+                  title="Open Cowrie honeypot dashboard in a new tab"
+                >
+                  Honeypot Logs
+                </a>
+
+                <button
+                  onClick={() => navigate("/model-lab")}
+                  className="px-4 py-2 rounded-xl font-semibold bg-[#fff9f3] border border-[#f2c197] shadow text-[#4a2e05] hover:bg-white transition"
+                  title="Open ML analysis page"
+                >
+                  DeepFake
+                </button>
+
+                <button
+                  onClick={() => navigate("/malware")}
+                  className="px-4 py-2 rounded-xl font-semibold bg-[#fff9f3] border border-[#f2c197] shadow text-[#4a2e05] hover:bg-white transition"
+                  title="Open Malware Scanner page"
+                >
+                  Malware Scan
+                </button>
+              </div>
+            </div>
+          </div> {/* <-- this closes the LEFT column wrapper (was missing) */}
+
+          {/* Right sidebar */}
           <div className="h-full p-4 overflow-y-auto bg-[#fffdfb] border-l-4 border-[#e07b3a]">
             <div className="flex items-center gap-2 mb-3">
               <h2 className="text-lg font-semibold mr-auto text-[#4a2e05]">Admin Dashboard</h2>
 
               <select
                 value={filter}
-                onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                  setFilter(e.target.value as Filter)
-                }
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFilter(e.target.value as Filter)}
                 className="bg-[#fffaf6] border border-[#f2c197] rounded-md px-2 py-1 text-sm text-[#4a2e05]"
                 title="Filter reports by type"
               >
@@ -254,16 +261,13 @@ export default function Dashboard() {
               </select>
             </div>
 
-
             <div className="flex items-center justify-between mt-3 mb-2">
               <h3 className="font-medium text-[#4a2e05]">Recent Reports</h3>
               <div className="flex gap-2">
                 <button
                   onClick={handleRunModels}
                   disabled={predicting || rows.length === 0}
-                  className={`px-3 py-1.5 rounded-md border ${
-                    predicting ? "opacity-60 cursor-not-allowed" : ""
-                  } border-[#f2c197] bg-[#e07b3a] text-white`}
+                  className={`px-3 py-1.5 rounded-md border ${predicting ? "opacity-60 cursor-not-allowed" : ""} border-[#f2c197] bg-[#e07b3a] text-white`}
                   title="Run model inference for visible rows"
                 >
                   {predicting ? "Running…" : "Run Models"}
@@ -272,9 +276,7 @@ export default function Dashboard() {
                 <button
                   onClick={handleExportCsv}
                   disabled={exporting || rows.length === 0}
-                  className={`px-3 py-1.5 rounded-md border ${
-                    exporting ? "opacity-60 cursor-not-allowed" : ""
-                  } border-[#f2c197] bg-[#fff9f3] text-[#4a2e05]`}
+                  className={`px-3 py-1.5 rounded-md border ${exporting ? "opacity-60 cursor-not-allowed" : ""} border-[#f2c197] bg-[#fff9f3] text-[#4a2e05]`}
                   title="Export current filter to CSV"
                 >
                   {exporting ? "Exporting…" : "Export CSV"}

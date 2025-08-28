@@ -10,8 +10,10 @@ from app.routers.reports import router as reports_router
 from app.routers.admin import router as admin_router
 from app.routers import predict
 from app.routers.alerts import router as alerts_router
-from app.routers.upload import router as upload_router  # assuming upload.py is in app/routers
-
+from app.routers.upload import router as upload_router 
+from app.routers import admin_ml
+from app.routers.admin_ml import router as admin_ml_router
+from app.routers import malware
 
 # ==================================================
 # App setup 
@@ -54,6 +56,10 @@ app.include_router(admin_router)
 app.include_router(predict.router)
 app.include_router(alerts_router)
 app.include_router(upload_router)
+app.include_router(admin_ml.router)
+app.include_router(admin_ml_router)
+app.include_router(malware.router)
+
 
 
 # ==================================================

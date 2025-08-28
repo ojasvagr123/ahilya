@@ -8,7 +8,7 @@ const _OVERRIDE = String.fromEnvironment('API_BASE', defaultValue: '');
 
 String getApiBase() {
   if (_OVERRIDE.isNotEmpty) return _OVERRIDE;
-  return "http://10.235.220.67:8000"; // <-- replace with your IP
+  return "http://10.235.220.199:8000"; // <-- replace with your IP
 }
 
 class Api {
